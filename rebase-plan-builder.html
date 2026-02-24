@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Rebase Plan Builder - GitKit</title>
+  <meta name="description" content="Draft an interactive rebase todo list from recent commits with optional WIP drop and fixup heuristics. Free GitKit tool.">
+  <link rel="canonical" href="https://devtoolbox.dedyn.io/gitkit/rebase-plan-builder.html">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Interactive Rebase Plan Builder - GitKit">
+  <meta property="og:description" content="Generate a first-draft git rebase -i todo list from a commit list.">
+  <meta property="og:url" content="https://devtoolbox.dedyn.io/gitkit/rebase-plan-builder.html">
+  <meta property="og:image" content="https://devtoolbox.dedyn.io/og/default.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Interactive Rebase Plan Builder - GitKit">
+  <meta name="twitter:description" content="Prepare safer interactive rebases with a generated todo draft.">
+  <link rel="stylesheet" href="/gitkit/style.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="topbar">
+      <a class="brand" href="/gitkit/">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>GitKit</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/gitkit/">Home</a>
+        <a href="/gitkit/branch-name-generator.html">Branch Name</a>
+        <a href="/gitkit/commit-message-builder.html">Commit Message</a>
+        <a href="/kits/">All Kits</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="panel hero">
+        <h1>Interactive Rebase Plan Builder</h1>
+        <p>Paste recent commits to generate a first-pass rebase todo file with optional cleanup rules.</p>
+      </section>
+
+      <section class="panel card">
+        <label for="commitList">Commits (oldest to newest, one per line, format: <span class="mono">abc1234 message text</span>)</label>
+        <textarea id="commitList" class="mono" placeholder="8ac8f81 feat: add webhook retry jitter\n7d3a190 fixup! feat: add webhook retry jitter\n5d9d43c wip: debug timeout edge case"></textarea>
+
+        <div class="grid form-grid" style="margin-top:10px;">
+          <div>
+            <label><input type="checkbox" id="dropWip" checked> Drop commits containing wip/tmp/debug</label>
+          </div>
+          <div>
+            <label><input type="checkbox" id="fixupHeuristic" checked> Mark fixup/squash commits as fixup</label>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:10px;">
+          <button type="button" id="buildPlanBtn">Build Rebase Plan</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite"></div>
+      </section>
+
+      <section class="panel card" style="margin-top:14px;">
+        <h3>Safety Checklist</h3>
+        <ul>
+          <li>Run this on a feature branch, not on your protected main branch.</li>
+          <li>Verify commit order before applying generated actions.</li>
+          <li>Use <span class="mono">git push --force-with-lease</span> only after checking remote branch status.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function buildRebasePlan() {
+      const raw = document.getElementById('commitList').value.trim();
+      const dropWip = document.getElementById('dropWip').checked;
+      const fixupHeuristic = document.getElementById('fixupHeuristic').checked;
+      const result = document.getElementById('result');
+
+      if (!raw) {
+        result.className = 'result warn';
+        result.innerHTML = '<strong>Commit list required.</strong><p class="small">Paste one commit per line to build a rebase plan.</p>';
+        return;
+      }
+
+      const lines = raw.split('\n').map((line) => line.trim()).filter(Boolean);
+      const parsed = [];
+
+      for (const line of lines) {
+        const match = line.match(/^([0-9a-f]{6,40})\s+(.+)$/i);
+        if (!match) {
+          result.className = 'result warn';
+          result.innerHTML = `<strong>Invalid line:</strong> <span class="mono">${line}</span><p class="small">Expected format: sha + message.</p>`;
+          return;
+        }
+        parsed.push({ sha: match[1], message: match[2] });
+      }
+
+      const todo = [];
+      let kept = 0;
+
+      parsed.forEach((commit, index) => {
+        const msg = commit.message.toLowerCase();
+
+        if (dropWip && /(wip|tmp|debug)/.test(msg)) {
+          todo.push(`drop ${commit.sha} ${commit.message}`);
+          return;
+        }
+
+        if (fixupHeuristic && index > 0 && /(fixup!|squash!|^fixup:|^squash:)/.test(msg)) {
+          todo.push(`fixup ${commit.sha} ${commit.message}`);
+          kept += 1;
+          return;
+        }
+
+        todo.push(`pick ${commit.sha} ${commit.message}`);
+        kept += 1;
+      });
+
+      const depth = parsed.length;
+      const command = `git rebase -i HEAD~${depth}`;
+      const todoText = todo.join('\n');
+
+      result.className = 'result ok';
+      result.innerHTML = `
+        <strong>Generated rebase todo draft</strong>
+        <p class="small">Open editor with: <span class="mono">${command}</span></p>
+        <pre class="mono">${todoText}</pre>
+        <p class="small">Kept commits: ${kept} of ${parsed.length}</p>
+      `;
+    }
+
+    document.getElementById('buildPlanBtn').addEventListener('click', buildRebasePlan);
+    buildRebasePlan();
+  </script>
+</body>
+</html>

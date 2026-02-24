@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Branch Name Generator - GitKit</title>
+  <meta name="description" content="Generate consistent Git branch names from work type, ticket IDs, and summaries. Free GitKit tool.">
+  <link rel="canonical" href="https://devtoolbox.dedyn.io/gitkit/branch-name-generator.html">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Branch Name Generator - GitKit">
+  <meta property="og:description" content="Create clean branch names and copy-safe Git checkout commands.">
+  <meta property="og:url" content="https://devtoolbox.dedyn.io/gitkit/branch-name-generator.html">
+  <meta property="og:image" content="https://devtoolbox.dedyn.io/og/default.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Branch Name Generator - GitKit">
+  <meta name="twitter:description" content="Generate readable Git branch names from tickets and summaries.">
+  <link rel="stylesheet" href="/gitkit/style.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="topbar">
+      <a class="brand" href="/gitkit/">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>GitKit</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/gitkit/">Home</a>
+        <a href="/gitkit/commit-message-builder.html">Commit Message</a>
+        <a href="/gitkit/rebase-plan-builder.html">Rebase Plan</a>
+        <a href="/kits/">All Kits</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="panel hero">
+        <h1>Branch Name Generator</h1>
+        <p>Create consistent branch names that are easy to scan in pull requests and deployment logs.</p>
+      </section>
+
+      <section class="panel card">
+        <div class="grid form-grid">
+          <div>
+            <label for="workType">Work type</label>
+            <select id="workType">
+              <option value="feat">feat</option>
+              <option value="fix">fix</option>
+              <option value="docs">docs</option>
+              <option value="refactor">refactor</option>
+              <option value="test">test</option>
+              <option value="chore">chore</option>
+              <option value="hotfix">hotfix</option>
+            </select>
+          </div>
+          <div>
+            <label for="ticketId">Ticket ID (optional)</label>
+            <input id="ticketId" type="text" placeholder="JIRA-142 or #88">
+          </div>
+          <div>
+            <label for="summary">Summary</label>
+            <input id="summary" type="text" placeholder="stabilize retry logic on webhook sync">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" id="generateBtn">Generate Branch</button>
+        </div>
+        <div id="result" class="result" aria-live="polite"></div>
+      </section>
+
+      <section class="panel card" style="margin-top:14px;">
+        <h3>Naming Tips</h3>
+        <ul>
+          <li>Keep summary concise so branch names stay readable in CI logs.</li>
+          <li>Use stable ticket IDs for easier search in release notes.</li>
+          <li>Avoid user names or local machine identifiers in branch names.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function slugify(input) {
+      return input
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .replace(/-{2,}/g, '-');
+    }
+
+    function generateBranchName() {
+      const workType = document.getElementById('workType').value.trim() || 'chore';
+      const ticketRaw = document.getElementById('ticketId').value.trim();
+      const summaryRaw = document.getElementById('summary').value.trim();
+      const result = document.getElementById('result');
+
+      if (!summaryRaw) {
+        result.className = 'result warn';
+        result.innerHTML = '<strong>Summary required.</strong><p class="small">Add a short description of the change to generate a branch name.</p>';
+        return;
+      }
+
+      const summarySlug = slugify(summaryRaw);
+      const ticketSlug = slugify(ticketRaw.replace(/^#/, 'issue-'));
+      const segments = [workType];
+
+      if (ticketSlug) {
+        segments.push(ticketSlug);
+      }
+      segments.push(summarySlug);
+
+      const branchName = segments.join('/').replace('/','/').replace(/\/{2,}/g, '/');
+
+      result.className = 'result ok';
+      result.innerHTML = `
+        <strong class="mono">${branchName}</strong>
+        <p class="small">Copy and run:</p>
+        <pre class="mono">git checkout -b ${branchName}\ngit push -u origin ${branchName}</pre>
+      `;
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', generateBranchName);
+    generateBranchName();
+  </script>
+</body>
+</html>
