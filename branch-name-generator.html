@@ -103,12 +103,22 @@
       const ticketSlug = slugify(ticketRaw.replace(/^#/, 'issue-'));
       const segments = [workType];
 
+      if (!summarySlug) {
+        result.className = 'result warn';
+        result.innerHTML = '<strong>Summary invalid.</strong><p class="small">Use letters or numbers so the summary can be converted into a branch slug.</p>';
+        return;
+      }
+
       if (ticketSlug) {
         segments.push(ticketSlug);
       }
       segments.push(summarySlug);
 
-      const branchName = segments.join('/').replace('/','/').replace(/\/{2,}/g, '/');
+      const branchName = segments
+        .filter(Boolean)
+        .join('/')
+        .replace(/\/{2,}/g, '/')
+        .replace(/\/$/, '');
 
       result.className = 'result ok';
       result.innerHTML = `
