@@ -3,18 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Rebase Plan Builder - GitKit</title>
-  <meta name="description" content="Draft an interactive rebase todo list from recent commits with optional WIP drop and fixup heuristics. Free GitKit tool.">
+  <title>Interactive Rebase Todo Generator (git rebase -i) | GitKit</title>
+  <meta name="description" content="Generate a draft interactive rebase todo file from commit history, with optional WIP drop and fixup heuristics. Faster and safer git rebase -i prep.">
+  <meta name="keywords" content="interactive rebase todo generator, git rebase planner, git rebase -i helper, fixup squash planning">
   <link rel="canonical" href="https://devtoolbox.dedyn.io/gitkit/rebase-plan-builder.html">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Interactive Rebase Plan Builder - GitKit">
+  <meta property="og:title" content="Interactive Rebase Todo Generator | GitKit">
   <meta property="og:description" content="Generate a first-draft git rebase -i todo list from a commit list.">
   <meta property="og:url" content="https://devtoolbox.dedyn.io/gitkit/rebase-plan-builder.html">
   <meta property="og:image" content="https://devtoolbox.dedyn.io/og/default.png">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Interactive Rebase Plan Builder - GitKit">
+  <meta name="twitter:title" content="Interactive Rebase Todo Generator | GitKit">
   <meta name="twitter:description" content="Prepare safer interactive rebases with a generated todo draft.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Interactive Rebase Plan Builder",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true,
+        "url": "https://devtoolbox.dedyn.io/gitkit/rebase-plan-builder.html",
+        "description": "Create a draft git rebase -i todo list from commit lines with optional WIP drop and fixup heuristics."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What commit input format does this rebase planner expect?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Provide one commit per line as short SHA followed by message text, for example 8ac8f81 feat: add retry jitter."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can this tool mark fixup or squash commits automatically?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. With the fixup heuristic enabled, commit messages matching fixup or squash patterns are mapped to fixup actions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this tool execute rebase commands automatically?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. It only generates a draft todo list and command scaffold so you can review before running git rebase -i manually."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="/gitkit/style.css">
 </head>
 <body>
@@ -65,6 +111,13 @@
           <li>Verify commit order before applying generated actions.</li>
           <li>Use <span class="mono">git push --force-with-lease</span> only after checking remote branch status.</li>
         </ul>
+      </section>
+
+      <section class="panel card" style="margin-top:14px;">
+        <h3>Related GitKit Tools</h3>
+        <p>Use the <a href="/gitkit/branch-name-generator.html">Branch Name Generator</a> before starting a feature branch.</p>
+        <p>After cleanup, prepare a consistent commit header with the <a href="/gitkit/commit-message-builder.html">Commit Message Builder</a>.</p>
+        <p>Need conflict-handling and recovery walkthroughs? Read the <a href="/blog/git-rebase-complete-guide">Git Rebase Complete Guide</a>.</p>
       </section>
     </main>
   </div>

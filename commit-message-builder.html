@@ -3,18 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Commit Message Builder - GitKit</title>
-  <meta name="description" content="Build conventional commit messages with type, scope, body, and footer sections. Free GitKit tool.">
+  <title>Conventional Commit Message Builder (feat/fix/docs) | GitKit</title>
+  <meta name="description" content="Build Conventional Commit messages with type, optional scope, body, and issue footer. Includes header-length checks and copy-ready git commit commands.">
+  <meta name="keywords" content="conventional commit generator, git commit message builder, feat fix docs commit format, semantic commit message tool">
   <link rel="canonical" href="https://devtoolbox.dedyn.io/gitkit/commit-message-builder.html">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Commit Message Builder - GitKit">
+  <meta property="og:title" content="Conventional Commit Message Builder | GitKit">
   <meta property="og:description" content="Generate consistent Conventional Commit messages and copy-safe git commit commands.">
   <meta property="og:url" content="https://devtoolbox.dedyn.io/gitkit/commit-message-builder.html">
   <meta property="og:image" content="https://devtoolbox.dedyn.io/og/default.png">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Commit Message Builder - GitKit">
+  <meta name="twitter:title" content="Conventional Commit Message Builder | GitKit">
   <meta name="twitter:description" content="Create conventional commit messages with live header checks.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Conventional Commit Message Builder",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true,
+        "url": "https://devtoolbox.dedyn.io/gitkit/commit-message-builder.html",
+        "description": "Build conventional commit headers and optional body/footer sections with live header checks."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What commit format does this builder support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It supports Conventional Commits, including type, optional scope, summary, and optional body and footer blocks."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it warn when my commit header is too long?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The tool calculates header length and warns when it exceeds the common 72-character readability guideline."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I include issue references like Closes #123?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. You can add an issue reference line that is appended as a separate commit message paragraph."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="/gitkit/style.css">
 </head>
 <body>
@@ -85,6 +131,13 @@
           <li>Use the body to explain intent, not only implementation details.</li>
           <li>Include explicit issue references when you want automatic closure.</li>
         </ul>
+      </section>
+
+      <section class="panel card" style="margin-top:14px;">
+        <h3>Related GitKit Tools</h3>
+        <p>Start with the <a href="/gitkit/branch-name-generator.html">Branch Name Generator</a> so branch and commit naming follow the same convention.</p>
+        <p>Cleaning history before review? Build a draft todo in the <a href="/gitkit/rebase-plan-builder.html">Interactive Rebase Plan Builder</a>.</p>
+        <p>Need a full workflow? Read the <a href="/blog/git-rebase-complete-guide">Git Rebase Complete Guide</a>.</p>
       </section>
     </main>
   </div>

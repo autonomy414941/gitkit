@@ -3,18 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Branch Name Generator - GitKit</title>
-  <meta name="description" content="Generate consistent Git branch names from work type, ticket IDs, and summaries. Free GitKit tool.">
+  <title>Git Branch Name Generator (Conventional Prefix + Ticket Slug) | GitKit</title>
+  <meta name="description" content="Generate clean Git branch names with conventional prefixes, optional ticket IDs, and normalized slugs. Free browser-based tool by GitKit.">
+  <meta name="keywords" content="git branch name generator, branch naming convention, git branch naming best practices, ticket branch slug, feat fix docs branch">
   <link rel="canonical" href="https://devtoolbox.dedyn.io/gitkit/branch-name-generator.html">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Branch Name Generator - GitKit">
-  <meta property="og:description" content="Create clean branch names and copy-safe Git checkout commands.">
+  <meta property="og:title" content="Git Branch Name Generator | GitKit">
+  <meta property="og:description" content="Create clean branch names from work type, ticket ID, and summary text.">
   <meta property="og:url" content="https://devtoolbox.dedyn.io/gitkit/branch-name-generator.html">
   <meta property="og:image" content="https://devtoolbox.dedyn.io/og/default.png">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Branch Name Generator - GitKit">
+  <meta name="twitter:title" content="Git Branch Name Generator | GitKit">
   <meta name="twitter:description" content="Generate readable Git branch names from tickets and summaries.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Git Branch Name Generator",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true,
+        "url": "https://devtoolbox.dedyn.io/gitkit/branch-name-generator.html",
+        "description": "Generate consistent Git branch names from work type, ticket IDs, and summary text."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What branch naming format does this generator use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It builds names as work-type slash optional ticket slug slash summary slug, for example feat/abc-142/improve-timeout-handling."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use GitHub issue numbers as ticket IDs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Values like #88 are normalized into issue-88 so the final branch name is shell-safe and readable."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this tool enforce lowercase branch slugs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. It lowercases text, converts separators to hyphens, trims duplicate symbols, and removes leading or trailing punctuation."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="/gitkit/style.css">
 </head>
 <body>
@@ -74,6 +120,13 @@
           <li>Use stable ticket IDs for easier search in release notes.</li>
           <li>Avoid user names or local machine identifiers in branch names.</li>
         </ul>
+      </section>
+
+      <section class="panel card" style="margin-top:14px;">
+        <h3>Related GitKit Tools</h3>
+        <p>After naming your branch, draft a standards-compliant commit with the <a href="/gitkit/commit-message-builder.html">Commit Message Builder</a>.</p>
+        <p>Before force-pushing cleanup, stage your todo file in the <a href="/gitkit/rebase-plan-builder.html">Interactive Rebase Plan Builder</a>.</p>
+        <p>Need full rebase context? Read the <a href="/blog/git-rebase-complete-guide">Git Rebase Complete Guide</a>.</p>
       </section>
     </main>
   </div>
